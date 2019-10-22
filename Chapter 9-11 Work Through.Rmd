@@ -1,0 +1,202 @@
+---
+title: "Chapter 9-11 Work Through"
+author: "Brianna Cabrera"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+```
+#Chapter 10
+Tibbles
+
+* Printing
+    + Only shows the first 10 rows and all the columns that fit on screen
+    + so you don't overwhelm your console when printing large data frames
+* Subsetting
+    + extracts variables
+
+##10.5 Exercises
+
+###1
+```{r}
+mtcars
+```
+You can tell if an object is a tibble if when the data is printed to screen and only the first 10 rows and all the columns that fit on the screen are shown after loading the data. 
+
+###2
+```{r}
+?data.frame
+```
+This function creates data frames where we use arguments to manipulate the data and choose exacly what we want to print onto screen while tibble shows everything from the first 10 rows. 
+```{r}
+df <- data.frame(abc = 1, xyz = "a")
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
+```
+This default data frame doesn't show enough of the data. 
+
+###3
+You would use the "$" in order to extract the reference variable from a tibble
+
+###4
+```{r}
+annoying <- tibble(
+  `1` = 1:10,
+  `2` = `1` * 2 + rnorm(length(`1`))
+)
+annoying
+```
+
+* 1
+
+```{r}
+annoying$`1`
+```
+
+* 2
+
+```{r}
+ggplot(data = annoying) +
+  geom_point(mapping = aes(x=`1`, y=`2`))
+```
+
+* 3
+
+```{r}
+annoying %>%
+  mutate("3" = `2`/`1`)
+```
+
+* 4 
+
+```{r}
+?rename()
+```
+Not sure how to rename columns as they're numeric values.
+
+###5
+
+```{r}
+?tibble::enframe()
+```
+This function takes lists and converts them to one or two-column data frames.. You might use this when you want to evaluate specific data in a dataset. 
+
+###6
+
+```{r}
+?tibble
+```
+The `name,value` argument controls how many addtional column names are printed at the footer of the tibble.
+
+#Chapter 11
+##11.2.2 Exercises
+```{r}
+library(readr)
+```
+
+###1
+You should use the function `read_delim()`.
+
+###2
+```{r}
+?read_csv
+```
+These two functions share all the same arguments.
+
+###3
+```{r}
+?read_fwf()
+```
+The most important arguments in this function include `col_names` and `col_positions`.
+
+###4
+```{r}
+read_csv("x,y\n1,'a,b'", quote = "'")
+```
+###5
+```{r}
+read_csv("a,b\n1,2,3\n4,5,6")
+```
+There are only 2 columns and the values in the last columns were dropped.
+```{r}
+read_csv("a,b,c\n1,2\n1,2,3,4")
+```
+There are only 3 columns and there is an `NA` in the last column. 
+
+```{r}
+read_csv("a,b\n\"1")
+```
+Only one value is shown because of of the `\"`
+
+```{r}
+read_csv("a,b\n1,2\na,b")
+```
+The second row is the same as the column names.
+
+```{r}
+read_csv("a;b\n1;3")
+```
+Everything is treated as a single value because `read_csv` looks for commas.
+
+##11.3.5 Exercises
+###1
+```{r}
+?locale()
+```
+The `date_names`, `tz`, `encoding`, and `asciify` arguments are the most important. 
+
+###2
+If you were to set these arguments to the same character, it would result in an error. 
+
+###3 
+
+These two arguments set the date and time. 
+```{r}
+parse_date("11/02/19", locale = locale(date_format = "%d/%m/%y"))
+```
+
+###4
+We live in the US.
+
+###5
+`read_csv()` looks for commas while `read_csv()` looks for semi-colons.
+
+###6
+ASCII67 is used in Europe. CJK is used in Asia. 
+
+###7
+```{r}
+d1 <- "January 1, 2010"
+parse_date(d1, "%B %d, %Y")
+```
+```{r}
+d2 <- "2015-Mar-07"
+parse_date(d2, "%Y-%b-%d")
+```
+```{r}
+d3 <- "06-Jun-2017"
+parse_date(d3, "%d-%b-%Y")
+```
+```{r}
+d4 <- c("August 19 (2015)", "July 1 (2015)")
+parse_date(d4, "%B %d (%Y)")
+```
+```{r}
+d5 <- "12/30/14" # Dec 30, 2014
+parse_date(d5, "%m/%d/%y")
+```
+```{r}
+t1 <- "1705"
+parse_time(t1, "%H%M")
+```
+```{r}
+t2 <- "11:15:10.12 PM"
+parse_time(t2, "%I:%M:%OS %p")
+```
+
+
+
+
